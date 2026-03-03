@@ -71,7 +71,8 @@
           <button class="btn btn-sm" id="new-excuse-btn" aria-label="Get a new random excuse">New Excuse</button>
         </div>
         <pre class="hero-excuse-output"><code id="hero-excuse-code">{
-  "data": [{ "id": 42, "quote": "Solar flares" }],
+  "data": { "id": 42, "excuse": "Solar flares" },
+  "meta": { "total": 453 },
   "error": null
 }</code></pre>
       </div>
@@ -138,7 +139,8 @@
         <div class="code-block">
           <div class="code-header"><span>Response</span></div>
           <pre><code class="json">{
-  <span class="t-key">"data"</span>: [{ <span class="t-key">"id"</span>: <span class="t-num">42</span>, <span class="t-key">"quote"</span>: <span class="t-str">"Solar flares"</span>, <span class="t-key">"source"</span>: <span class="t-str">"..."</span>, <span class="t-key">"date"</span>: <span class="t-str">"..."</span> }],
+  <span class="t-key">"data"</span>: { <span class="t-key">"id"</span>: <span class="t-num">42</span>, <span class="t-key">"excuse"</span>: <span class="t-str">"Solar flares"</span> },
+  <span class="t-key">"meta"</span>: { <span class="t-key">"total"</span>: <span class="t-num">453</span> },
   <span class="t-key">"error"</span>: <span class="t-null">null</span>
 }</code></pre>
         </div>
@@ -148,24 +150,25 @@
       <div class="endpoint">
         <div class="endpoint-header">
           <span class="method">GET</span>
-          <code class="endpoint-path">/v1/excuses/random/:count</code>
+          <code class="endpoint-path">/v1/excuses/random?count=N</code>
         </div>
         <p class="endpoint-desc">Returns up to <code>count</code> random excuses (1&ndash;50).</p>
         <div class="code-block">
           <div class="code-header">
             <span>Request</span>
-            <button class="copy-btn" aria-label="Copy to clipboard" data-copy="curl https://bofh.bombeck.io/v1/excuses/random/3">Copy</button>
+            <button class="copy-btn" aria-label="Copy to clipboard" data-copy="curl https://bofh.bombeck.io/v1/excuses/random?count=3">Copy</button>
           </div>
-          <pre><code>curl https://bofh.bombeck.io/v1/excuses/random/3</code></pre>
+          <pre><code>curl https://bofh.bombeck.io/v1/excuses/random?count=3</code></pre>
         </div>
         <div class="code-block">
           <div class="code-header"><span>Response</span></div>
           <pre><code class="json">{
   <span class="t-key">"data"</span>: [
-    { <span class="t-key">"id"</span>: <span class="t-num">112</span>, <span class="t-key">"quote"</span>: <span class="t-str">"Static buildup ..."</span>, <span class="t-key">"source"</span>: <span class="t-str">"..."</span>, <span class="t-key">"date"</span>: <span class="t-str">"..."</span> },
-    { <span class="t-key">"id"</span>: <span class="t-num">7</span>, <span class="t-key">"quote"</span>: <span class="t-str">"Cosmic rays"</span>, <span class="t-key">"source"</span>: <span class="t-str">"..."</span>, <span class="t-key">"date"</span>: <span class="t-str">"..."</span> },
-    { <span class="t-key">"id"</span>: <span class="t-num">301</span>, <span class="t-key">"quote"</span>: <span class="t-str">"The server ..."</span>, <span class="t-key">"source"</span>: <span class="t-str">"..."</span>, <span class="t-key">"date"</span>: <span class="t-str">"..."</span> }
+    { <span class="t-key">"id"</span>: <span class="t-num">112</span>, <span class="t-key">"excuse"</span>: <span class="t-str">"Static buildup ..."</span> },
+    { <span class="t-key">"id"</span>: <span class="t-num">7</span>, <span class="t-key">"excuse"</span>: <span class="t-str">"Cosmic rays"</span> },
+    { <span class="t-key">"id"</span>: <span class="t-num">301</span>, <span class="t-key">"excuse"</span>: <span class="t-str">"The server ..."</span> }
   ],
+  <span class="t-key">"meta"</span>: { <span class="t-key">"count"</span>: <span class="t-num">3</span>, <span class="t-key">"total"</span>: <span class="t-num">453</span> },
   <span class="t-key">"error"</span>: <span class="t-null">null</span>
 }</code></pre>
         </div>
@@ -175,20 +178,21 @@
       <div class="endpoint">
         <div class="endpoint-header">
           <span class="method">GET</span>
-          <code class="endpoint-path">/v1/excuses/id/:id</code>
+          <code class="endpoint-path">/v1/excuses/:id</code>
         </div>
         <p class="endpoint-desc">Returns a specific excuse by ID (1&ndash;453).</p>
         <div class="code-block">
           <div class="code-header">
             <span>Request</span>
-            <button class="copy-btn" aria-label="Copy to clipboard" data-copy="curl https://bofh.bombeck.io/v1/excuses/id/42">Copy</button>
+            <button class="copy-btn" aria-label="Copy to clipboard" data-copy="curl https://bofh.bombeck.io/v1/excuses/42">Copy</button>
           </div>
-          <pre><code>curl https://bofh.bombeck.io/v1/excuses/id/42</code></pre>
+          <pre><code>curl https://bofh.bombeck.io/v1/excuses/42</code></pre>
         </div>
         <div class="code-block">
           <div class="code-header"><span>Response</span></div>
           <pre><code class="json">{
-  <span class="t-key">"data"</span>: { <span class="t-key">"id"</span>: <span class="t-num">42</span>, <span class="t-key">"quote"</span>: <span class="t-str">"Solar flares"</span>, <span class="t-key">"source"</span>: <span class="t-str">"..."</span>, <span class="t-key">"date"</span>: <span class="t-str">"..."</span> },
+  <span class="t-key">"data"</span>: { <span class="t-key">"id"</span>: <span class="t-num">42</span>, <span class="t-key">"excuse"</span>: <span class="t-str">"Solar flares"</span> },
+  <span class="t-key">"meta"</span>: { <span class="t-key">"total"</span>: <span class="t-num">453</span> },
   <span class="t-key">"error"</span>: <span class="t-null">null</span>
 }</code></pre>
         </div>
@@ -198,15 +202,15 @@
       <div class="endpoint">
         <div class="endpoint-header">
           <span class="method">GET</span>
-          <code class="endpoint-path">/v1/excuses/all</code>
+          <code class="endpoint-path">/v1/excuses</code>
         </div>
         <p class="endpoint-desc">Returns all 453 excuses.</p>
         <div class="code-block">
           <div class="code-header">
             <span>Request</span>
-            <button class="copy-btn" aria-label="Copy to clipboard" data-copy="curl https://bofh.bombeck.io/v1/excuses/all">Copy</button>
+            <button class="copy-btn" aria-label="Copy to clipboard" data-copy="curl https://bofh.bombeck.io/v1/excuses">Copy</button>
           </div>
-          <pre><code>curl https://bofh.bombeck.io/v1/excuses/all</code></pre>
+          <pre><code>curl https://bofh.bombeck.io/v1/excuses</code></pre>
         </div>
       </div>
 
@@ -223,6 +227,7 @@
           </div>
           <pre><code class="json">{
   <span class="t-key">"data"</span>: { <span class="t-key">"status"</span>: <span class="t-str">"ok"</span>, <span class="t-key">"version"</span>: <span class="t-str">"3.0.0"</span>, <span class="t-key">"uptime"</span>: <span class="t-num">86400</span> },
+  <span class="t-key">"meta"</span>: <span class="t-null">null</span>,
   <span class="t-key">"error"</span>: <span class="t-null">null</span>
 }</code></pre>
         </div>
@@ -239,7 +244,11 @@
         <h3>Errors</h3>
         <p>All errors follow the same envelope format:</p>
         <div class="code-block">
-          <pre><code class="json">{ <span class="t-key">"data"</span>: <span class="t-null">null</span>, <span class="t-key">"error"</span>: <span class="t-str">"not found"</span> }</code></pre>
+          <pre><code class="json">{
+  <span class="t-key">"data"</span>: <span class="t-null">null</span>,
+  <span class="t-key">"meta"</span>: <span class="t-null">null</span>,
+  <span class="t-key">"error"</span>: { <span class="t-key">"code"</span>: <span class="t-str">"NOT_FOUND"</span>, <span class="t-key">"message"</span>: <span class="t-str">"not found"</span> }
+}</code></pre>
         </div>
         <table class="error-table">
           <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
@@ -284,11 +293,11 @@
               <span>JavaScript</span>
               <button class="copy-btn" aria-label="Copy to clipboard" data-copy='const res = await fetch("https://bofh.bombeck.io/v1/excuses/random");
 const { data } = await res.json();
-console.log(data[0].quote);'>Copy</button>
+console.log(data.excuse);'>Copy</button>
             </div>
             <pre><code><span class="t-key">const</span> res = <span class="t-key">await</span> <span class="t-fn">fetch</span>(<span class="t-str">"https://bofh.bombeck.io/v1/excuses/random"</span>);
 <span class="t-key">const</span> { data } = <span class="t-key">await</span> res.<span class="t-fn">json</span>();
-console.<span class="t-fn">log</span>(data[<span class="t-num">0</span>].quote);</code></pre>
+console.<span class="t-fn">log</span>(data.excuse);</code></pre>
           </div>
         </div>
 
@@ -299,14 +308,14 @@ console.<span class="t-fn">log</span>(data[<span class="t-num">0</span>].quote);
               <button class="copy-btn" aria-label="Copy to clipboard" data-copy='import requests
 
 r = requests.get("https://bofh.bombeck.io/v1/excuses/random")
-quote = r.json()["data"][0]["quote"]
-print(quote)'>Copy</button>
+excuse = r.json()["data"]["excuse"]
+print(excuse)'>Copy</button>
             </div>
             <pre><code><span class="t-key">import</span> requests
 
 r = requests.<span class="t-fn">get</span>(<span class="t-str">"https://bofh.bombeck.io/v1/excuses/random"</span>)
-quote = r.<span class="t-fn">json</span>()[<span class="t-str">"data"</span>][<span class="t-num">0</span>][<span class="t-str">"quote"</span>]
-<span class="t-fn">print</span>(quote)</code></pre>
+excuse = r.<span class="t-fn">json</span>()[<span class="t-str">"data"</span>][<span class="t-str">"excuse"</span>]
+<span class="t-fn">print</span>(excuse)</code></pre>
           </div>
         </div>
 

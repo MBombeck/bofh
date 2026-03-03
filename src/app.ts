@@ -65,12 +65,7 @@ export function createApp(): express.Express {
     customProps: (req: IncomingMessage) => ({ requestId: (req as Express.Request).id }),
   }));
 
-  // 6. Sentry request handler
-  if (config.SENTRY_DSN) {
-    Sentry.setupExpressErrorHandler(app);
-  }
-
-  // 7. Rate limiting (skip /health and static assets)
+  // 6. Rate limiting (skip /health and static assets)
   app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 1000,
@@ -82,34 +77,42 @@ export function createApp(): express.Express {
         res.status(429).sendFile(path.join(__dirname, '..', 'public', '429.html'));
         return;
       }
-      res.status(429).json({ data: null, error: 'too many requests' });
+      res.status(429).json({
+        data: null,
+        meta: null,
+        error: { code: 'RATE_LIMITED', message: 'too many requests' },
+      });
     },
   }));
 
-  // 8. Static files (landing page)
+  // 7. Static files (landing page)
   app.use(express.static(path.join(__dirname, '..', 'public'), {
     maxAge: '1d',
     index: false,
   }));
 
-  // 9. Landing page route (host-based)
-  app.get('/', (req, res, next) => {
+  // 8. Landing page route (host-based)
+  app.get('/', (req, res, _next) => {
     const host = (req.hostname || '').toLowerCase();
     if (host === config.LANDING_HOST || host === 'localhost') {
       res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
     } else {
-      // Non-landing hosts redirect to landing page
       res.redirect(301, `https://${config.LANDING_HOST}/`);
     }
   });
 
-  // 10. API Routes
+  // 9. API Routes
   app.use(healthRouter);
   app.use(excusesRouter);
   app.use(attacksRouter);
 
-  // 11. 404
+  // 10. 404
   app.use(notFoundHandler);
+
+  // 11. Sentry error handler (captures exceptions before custom handler)
+  if (config.SENTRY_DSN) {
+    Sentry.setupExpressErrorHandler(app);
+  }
 
   // 12. Global error handler
   app.use(errorHandler);

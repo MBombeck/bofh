@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ErrorRequestHandler, RequestHandler } from 'express';
+import { ZodError } from 'zod';
 import * as Sentry from '@sentry/node';
 import { ApiError } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
@@ -16,12 +17,27 @@ function wantsHtml(accept: string | undefined): boolean {
 }
 
 export const notFoundHandler: RequestHandler = (_req, _res, next) => {
-  next(new ApiError(404, 'not found'));
+  next(new ApiError(404, 'NOT_FOUND', 'not found'));
 };
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
-  const statusCode = err instanceof ApiError ? err.statusCode : 500;
-  const message = err instanceof ApiError ? err.message : 'internal server error';
+  let statusCode: number;
+  let code: string;
+  let message: string;
+
+  if (err instanceof ApiError) {
+    statusCode = err.statusCode;
+    code = err.code;
+    message = err.message;
+  } else if (err instanceof ZodError) {
+    statusCode = 400;
+    code = 'VALIDATION_ERROR';
+    message = err.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ');
+  } else {
+    statusCode = 500;
+    code = 'INTERNAL_ERROR';
+    message = 'internal server error';
+  }
 
   if (statusCode >= 500) {
     Sentry.captureException(err);
@@ -33,5 +49,9 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     return;
   }
 
-  res.status(statusCode).json({ data: null, error: message });
+  res.status(statusCode).json({
+    data: null,
+    meta: null,
+    error: { code, message },
+  });
 };

@@ -20,8 +20,8 @@
       excuseBtn.disabled = true;
       const res = await fetch('/v1/excuses/random');
       const json = await res.json();
-      if (json.data && json.data.length > 0) {
-        const pretty = JSON.stringify(json, null, 2);
+      if (json.data) {
+        var pretty = JSON.stringify(json, null, 2);
         excuseCode.textContent = pretty;
       }
     } catch (err) {

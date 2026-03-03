@@ -5,19 +5,19 @@
 (function () {
   'use strict';
 
-  const API_BASE = window.location.origin;
-  const output = document.getElementById('terminal-output');
-  const input = document.getElementById('terminal-input');
-  const body = document.getElementById('terminal-body');
-  const history = [];
-  let historyIndex = -1;
+  var API_BASE = window.location.origin;
+  var output = document.getElementById('terminal-output');
+  var input = document.getElementById('terminal-input');
+  var body = document.getElementById('terminal-body');
+  var history = [];
+  var historyIndex = -1;
 
   if (!output || !input) return;
 
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const cmd = input.value.trim();
+      var cmd = input.value.trim();
       if (cmd) {
         history.unshift(cmd);
         historyIndex = -1;
@@ -42,13 +42,12 @@
     }
   });
 
-  // Focus input when clicking terminal body
   body.addEventListener('click', function () {
     input.focus();
   });
 
   function appendLine(html, className) {
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'terminal-line ' + (className || '');
     div.innerHTML = html;
     output.appendChild(div);
@@ -72,13 +71,13 @@
   }
 
   function escapeHtml(str) {
-    const el = document.createElement('span');
+    var el = document.createElement('span');
     el.textContent = str;
     return el.innerHTML;
   }
 
   function formatJson(obj) {
-    const raw = JSON.stringify(obj, null, 2);
+    var raw = JSON.stringify(obj, null, 2);
     return raw
       .replace(/"([^"]+)":/g, '<span class="t-key">"$1"</span>:')
       .replace(/: "([^"]*)"/g, ': <span class="t-str">"$1"</span>')
@@ -87,9 +86,9 @@
   }
 
   async function processCommand(raw) {
-    const parts = raw.toLowerCase().split(/\s+/);
-    const cmd = parts[0];
-    const arg = parts[1] || '';
+    var parts = raw.toLowerCase().split(/\s+/);
+    var cmd = parts[0];
+    var arg = parts[1] || '';
 
     appendCmd(raw);
 
@@ -125,30 +124,30 @@
 
   async function handleExcuse(arg) {
     try {
-      let url;
+      var url;
       if (!arg) {
         url = API_BASE + '/v1/excuses/random';
       } else if (arg.startsWith('#')) {
-        const id = parseInt(arg.slice(1), 10);
+        var id = parseInt(arg.slice(1), 10);
         if (isNaN(id) || id < 1) {
           appendError('Invalid ID. Use excuse #1 through #453.');
           return;
         }
-        url = API_BASE + '/v1/excuses/id/' + id;
+        url = API_BASE + '/v1/excuses/' + id;
       } else {
-        const n = parseInt(arg, 10);
+        var n = parseInt(arg, 10);
         if (isNaN(n) || n < 1 || n > 50) {
           appendError('Count must be between 1 and 50.');
           return;
         }
-        url = API_BASE + '/v1/excuses/random/' + n;
+        url = API_BASE + '/v1/excuses/random?count=' + n;
       }
 
-      const res = await fetch(url);
-      const json = await res.json();
+      var res = await fetch(url);
+      var json = await res.json();
 
       if (json.error) {
-        appendError(escapeHtml(json.error));
+        appendError(escapeHtml(json.error.message || json.error));
       } else {
         appendResult(formatJson(json));
       }
@@ -159,14 +158,13 @@
 
   async function handleStatus() {
     try {
-      const res = await fetch(API_BASE + '/health');
-      const json = await res.json();
+      var res = await fetch(API_BASE + '/health');
+      var json = await res.json();
       appendResult(formatJson(json));
     } catch (err) {
       appendError('Health check failed: ' + escapeHtml(err.message));
     }
   }
 
-  // Expose for external use
   window.bofhTerminal = { processCommand: processCommand };
 })();

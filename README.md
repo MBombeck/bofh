@@ -35,7 +35,8 @@ curl https://bofh.bombeck.io/v1/excuses/random
 
 ```json
 {
-  "data": [{ "id": 42, "quote": "Solar flares", "source": "...", "date": "..." }],
+  "data": { "id": 42, "excuse": "Solar flares" },
+  "meta": { "total": 453 },
   "error": null
 }
 ```
@@ -45,7 +46,7 @@ curl https://bofh.bombeck.io/v1/excuses/random
 ```javascript
 const res = await fetch("https://bofh.bombeck.io/v1/excuses/random");
 const { data } = await res.json();
-console.log(data[0].quote);
+console.log(data.excuse);
 ```
 
 ### Python
@@ -54,8 +55,7 @@ console.log(data[0].quote);
 import requests
 
 r = requests.get("https://bofh.bombeck.io/v1/excuses/random")
-quote = r.json()["data"][0]["quote"]
-print(quote)
+print(r.json()["data"]["excuse"])
 ```
 
 ### Go
@@ -71,7 +71,7 @@ fmt.Println(string(body))
 
 **Base URL:** `https://bofh.bombeck.io`
 
-All responses follow the envelope format `{ data, error }`.
+All responses follow the envelope format `{ data, meta, error }`.
 
 ### Endpoints
 
@@ -79,41 +79,51 @@ All responses follow the envelope format `{ data, error }`.
 
 Returns one random excuse.
 
-#### `GET /v1/excuses/random/:count`
+```json
+{
+  "data": { "id": 42, "excuse": "Solar flares" },
+  "meta": { "total": 453 },
+  "error": null
+}
+```
 
-Returns up to `count` random excuses (1–50).
+#### `GET /v1/excuses/random?count=N`
+
+Returns up to N random excuses (1–50).
 
 ```bash
-curl https://bofh.bombeck.io/v1/excuses/random/5
+curl "https://bofh.bombeck.io/v1/excuses/random?count=3"
 ```
 
 ```json
 {
   "data": [
-    { "id": 112, "quote": "Langstroth bees rejecting null-routed wireless packets", "source": "...", "date": "..." },
-    { "id": 7, "quote": "Cosmic rays", "source": "...", "date": "..." },
-    { "id": 301, "quote": "Failure to adjust for stripes on ruggedized disk platter", "source": "...", "date": "..." }
+    { "id": 112, "excuse": "clock speed" },
+    { "id": 7, "excuse": "Langstroth bees" },
+    { "id": 301, "excuse": "Cosmic rays" }
   ],
+  "meta": { "count": 3, "total": 453 },
   "error": null
 }
 ```
 
-#### `GET /v1/excuses/id/:id`
+#### `GET /v1/excuses/:id`
 
 Returns a specific excuse by ID (1–453).
 
 ```bash
-curl https://bofh.bombeck.io/v1/excuses/id/42
+curl https://bofh.bombeck.io/v1/excuses/42
 ```
 
 ```json
 {
-  "data": { "id": 42, "quote": "Solar flares", "source": "...", "date": "..." },
+  "data": { "id": 42, "excuse": "Solar flares" },
+  "meta": { "total": 453 },
   "error": null
 }
 ```
 
-#### `GET /v1/excuses/all`
+#### `GET /v1/excuses`
 
 Returns all 453 excuses.
 
@@ -124,6 +134,7 @@ Health check endpoint.
 ```json
 {
   "data": { "status": "ok", "version": "3.0.0", "uptime": 86400 },
+  "meta": null,
   "error": null
 }
 ```
@@ -140,7 +151,8 @@ Health check endpoint.
 ```json
 {
   "data": null,
-  "error": "not found"
+  "meta": null,
+  "error": { "code": "NOT_FOUND", "message": "excuse not found" }
 }
 ```
 
@@ -158,14 +170,14 @@ Health check endpoint.
 docker run -d \
   -p 3000:3000 \
   -e ATTACKS_API_KEY=your-secret-key \
-  ghcr.io/mbombeck/bofh-api:latest
+  ghcr.io/mbombeck/bofh:latest
 ```
 
 ### Node.js
 
 ```bash
-git clone https://github.com/MBombeck/bofh-api.git
-cd bofh-api
+git clone https://github.com/MBombeck/bofh.git
+cd bofh
 npm ci
 npm run build
 ATTACKS_API_KEY=your-secret-key npm start
