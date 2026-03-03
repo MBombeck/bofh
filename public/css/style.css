@@ -202,7 +202,9 @@ a:focus-visible {
   border-radius: var(--radius-lg);
   overflow: hidden;
   text-align: left;
-  max-width: 560px;
+  width: fit-content;
+  min-width: min(100%, 320px);
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -238,8 +240,7 @@ a:focus-visible {
   background: none;
   padding: 0;
   color: var(--text-muted);
-  white-space: pre-wrap;
-  word-break: break-word;
+  white-space: pre;
 }
 
 /* ========================================
@@ -576,8 +577,8 @@ a:focus-visible {
    Responsive
    ======================================== */
 @media (max-width: 640px) {
-  .hero-excuse { margin: 0 -0.5rem; border-radius: var(--radius); max-width: none; }
-  .hero-excuse-output code { font-size: 0.75rem; }
+  .hero-excuse { margin: 0 -0.5rem; border-radius: var(--radius); width: auto; min-width: 0; }
+  .hero-excuse-output code { font-size: 0.75rem; white-space: pre-wrap; word-break: break-word; }
 
   .terminal-body {
     min-height: 220px;
