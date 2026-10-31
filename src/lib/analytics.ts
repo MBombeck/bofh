@@ -12,7 +12,7 @@ interface AnalyticsEvent {
 // Keine Client-IP, kein Client-User-Agent - alle Aufrufe erscheinen als ein
 // technischer Besucher (bofh-api). Der API-Key (Scope ingest:write) sorgt dafuer,
 // dass Rybbit den Server-Aufruf nicht als Bot verwirft.
-const HOSTNAME = 'bofh-api.ioioio.dev';
+const HOSTNAME = 'bofh-api.bombeck.io';
 
 function headers(): Record<string, string> {
   const h: Record<string, string> = {
