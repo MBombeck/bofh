@@ -1,0 +1,5 @@
+#!/bin/sh
+# Blocks commits containing secrets (gitleaks). Enable per clone: git config core.hooksPath .githooks
+PATH="$PATH:/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin"
+command -v gitleaks >/dev/null 2>&1 || { echo "gitleaks missing - commit aborted (brew/apt install gitleaks)"; exit 1; }
+exec gitleaks protect --staged --no-banner --redact
