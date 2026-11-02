@@ -192,8 +192,3 @@ The **Bastard Operator From Hell** is a fictional rogue sysadmin created by [Sim
 ## License
 
 [MIT](LICENSE)
-
-## Secret scanning
-
-Commits are checked for secrets with [gitleaks](https://github.com/gitleaks/gitleaks): locally via the pre-commit hook
-(enable once per clone: `git config core.hooksPath .githooks`) and in CI (`.github/workflows/gitleaks.yml`, new commits only).
